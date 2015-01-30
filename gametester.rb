@@ -1,86 +1,200 @@
-require 'pry'  
+require 'pry'
+
+# class Game initializes the array for players, players moves, and the successful winner
+# the round method recieves the players names and moves from the initialize method. These data are fed into the counter to test who will win the round
+# the "until" counter will run the loop for the number of rounds elected by the players
+# the until counter will also call the PlayersScoreboard class for each round to add the wins/losses to the two players total score
+# the until counter also determines who will win by running a series of tests; when the test array (defined below) = 1, player 1 wins, when it = 2, player 2 wins.
+# whowins is a local variable that stores the initialized object "Driver" instance
+# test is a local variable that stores the result of who wins the given round using the Driver instance's method called rps_Driver
+# test takes four arguments: player 1 move, player 1 name, player 2 move, player 2 name to determine the result of each round (this could be simplified)
+# the scoreboard local variable calls the PlayersScoreboard class and store a new object instance of it
+# then, scoreboardTracker calls the "players" method of PlayersScoreboard taking two arguments: the winner result (1 or 2) of the test array position 0, and the winners name
+# counter is a local variable that counts the number of rounds played until it matches the number of games declared by the user
+
+
+
 class Game
-  attr_accessor :players, :player1_move, :player2_move
+  attr_accessor :players, :player1_move, :player2_move, :winner, :player1_wins, :player2_wins, :player1_losses, :player2_losses, :player1_log, :player2_log, :numofGames
   def initialize
     @player1 = []
     @player2 = []
     @player1_move = ""
     @player2_move = ""
+    @winner = 0
   end
   
-  def round(player1name, player1move, player2name, player2move)
+  def round(player1name, player1move, player2name, player2move, numofrounds)
     counter = 1
     name1 = player1name
     name2 = player2name
+    nowinner = " "
+    @numofGames = numofrounds
     @player1_move = player1move
     @player2_move = player2move
     @player1 = [name1, @player1_move]
     @player2 = [name2, @player2_move]
+    @thewinner = 0
     
-    if counter == 1
+    until counter > @numofGames
       whowins = Driver.new
-      test = whowins.rps_Driver(@player1_move, @player2_move) 
+      test = whowins.rps_Rules(@player1_move, @player2_move, name1, name2) 
       if test[0] == 1
         @winner = 1
+        @winnersName = name1
       elsif test[1] == 1
         @winner = 2
+        @winnersName = name2
       else
-        'no one wins'
+        @winner = 0
+        @winnersName = nowinner
       end
+      @thewinner = @winner
+      scoreboard = PlayersScoreboard.new
+      scoreboardTracker = scoreboard.players(@thewinner, @winnersName)
+      counter += 1
     end
   end
   
-  
 end
   
+
+class PlayersScoreboard
+  attr_accessor :player1_wins, :player2_wins, :player1_losses, :player2_losses, :player1_log, :player2_log, :numofGames, :name
+  def initialize
+    @player1_wins = 0
+    @player1_losses = 0
+    @player2_wins = 0
+    @player2_losses = 0
+    @player1_log = []
+    @player2_log = []
+    @name = ""
+  end
+  def players(elWinner, winnersname)
+  winner_name = winnersname
+  whowon = elWinner
+  @name = ""
+  if whowon == 1
+    @player1_wins += 1
+    @player2_losses += 1
+    @name = winner_name
+    @player1_log = [ @name, @player1_wins, @player1_losses ]
+  elsif whowon == 2
+    @player2_wins += 1
+    @player1_losses += 1
+    @name = winner_name
+    @player2_log = [ @name, @player2_wins, @player2_losses ]
+  else
+    puts 'draw, no one wins'
+  end
+  return @player1_log, @player2_log
+  end
+end
+
 class Driver
-  attr_accessor :player1wins, :player2wins, :player1, :player2
+  attr_accessor :player1wins, :player2wins
   def initialize
   @player1wins = 0
   @player2wins = 0
-  @player1 = ""
-  @player2 = ""
   end
-  def rps_Driver(player1, player2)
-  @player1 = player1
-  @player2 = player2
+  
+  def rps_Rules(player1, player2, name1, name2)
+  @player1_move = player1
+  @player2_move = player2
+  @player1_name = name1
+  @player2_name = name2
 
-  if @player1 == "rock" && @player2 == "paper"
+  if @player1_move == "rock" && @player2_move == "paper"
   @player2wins = 1 
   end
-  if @player1 == "scissors" && @player2 == "paper"
+  if @player1_move == "scissors" && @player2_move == "paper"
   @player1wins = 1
   end
-  if @player1 == "paper" && @player2 == "paper"
+  if @player1_move == "paper" && @player2_move == "paper"
   #no one wins
   end
-  if @player1 == "rock" && @player2 == "scissors"
+  if @player1_move == "rock" && @player2_move == "scissors"
   @player1wins = 1 
   end
-  if @player1 == "scissors" && @player2 == "scissors"
+  if @player1_move == "scissors" && @player2_move == "scissors"
   #no one wins
   end
-  if @player1 == "paper" && @player2 == "scissors"
+  if @player1_move == "paper" && @player2_move == "scissors"
   @player2wins = 1
   end
-  if @player1 == "rock" && @player2 == "rock"
+  if @player1_move == "rock" && @player2_move == "rock"
   #no one wins
   end
-  if @player1 == "scissors" && @player2 == "rock"
+  if @player1_move == "scissors" && @player2_move == "rock"
   @player2wins = 1
   end
-  if @player1 == "paper" && @player2 == "rock"
+  if @player1_move == "paper" && @player2_move == "rock"
   @player1wins = 1
   end
   if @player1wins == 1
-  puts "player 1 wins!"
+  puts @player1_name +" wins!"
   elsif @player2wins == 1
-  puts "player 2 wins"
+  puts @player2_name +" wins!"
   else
-  puts "tie!"
+  puts ""
   end
   return @player1wins, @player2wins
   end
+  
+  puts "-" * 60
+  puts " Rock Paper Scissors" * 3
+  puts "-" * 60
+  puts 
+  puts
+  puts "How many rounds would you like to play"
+  numberofrounds = gets.chomp.to_i
+
+  checkNumber = numberofrounds % 2
+
+  until checkNumber > 0
+  
+    puts "That doesn't appear to be a valid number of rounds. Please enter an integer (whole number) greater than zero: "
+    numberofrounds = gets.chomp.to_i
+    checkNumber = numberofrounds % 2
+  
+  end
+
+
+  puts "Player 1 name: Computer "
+  player1_create = "Computer"
+
+  puts "Player 1 rock, paper, or scissors? "
+  player1_move_create = ["rock", "paper", "scissors"].sample
+
+
+  until player1_move_create == "rock" || player1_move_create == "paper" || player1_move_create  == "scissors"
+    puts "Please enter rock, paper, or scissors"
+    player1_move_create = gets.chomp.downcase
+  end
+
+  puts "Player 2 name: "
+  player2_create = gets.chomp
+
+  puts "Player 2 rock, paper, or scissors? "
+  player2_move_create = gets.chomp.downcase
+
+  until player2_move_create == "rock" || player2_move_create == "paper" || player2_move_create  == "scissors"
+    puts "Please enter rock, paper, or scissors"
+    player2_move_create = gets.chomp.downcase
+  end
+  puts
+
+  newgame = Game.new
+  newgame.round(player1_create, player1_move_create, player2_create, player2_move_create, numberofrounds)
+
+  puts
+  puts "-" * 60
+  puts " GameOver" * 6
+  puts "-" * 60
+  puts 
+  puts
+  
 end
+
 
 binding.pry
