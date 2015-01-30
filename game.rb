@@ -37,7 +37,7 @@ class Game
     @thewinner = 0
     
     until counter > @numofGames
-      whowins = Driver.new
+      whowins = RPSGameRules.new
       test = whowins.rps_Rules(@player1_move, @player2_move, name1, name2) 
       if test[0] == 1
         @winner = 1
@@ -91,7 +91,7 @@ class PlayersScoreboard
   end
 end
 
-class Driver
+class RPSGameRules
   attr_accessor :player1wins, :player2wins
   def initialize
   @player1wins = 0
@@ -140,6 +140,9 @@ class Driver
   end
   return @player1wins, @player2wins
   end
+end
+
+class Driver
   
   puts "-" * 60
   puts " Rock Paper Scissors" * 3
@@ -189,7 +192,7 @@ class Driver
 
   puts
   puts "-" * 60
-  puts " GameOver" * 6
+  puts "   " + " GameOver" * 6
   puts "-" * 60
   puts 
   puts
