@@ -8,20 +8,21 @@ class Game
     @player1_move = ""
     @player2_move = ""
     @winner = 0
-    @numofGames = 0
   end
   
-  def round(player1name, player1move, player2name, player2move)
+  def round(player1name, player1move, player2name, player2move, numofrounds)
     counter = 1
     name1 = player1name
     name2 = player2name
     noname = " "
+    @numofGames = numofrounds
     @player1_move = player1move
     @player2_move = player2move
     @player1 = [name1, @player1_move]
     @player2 = [name2, @player2_move]
+    @thewinner = 0
     
-    if counter == 1
+    until counter > @numofGames
       whowins = Driver.new
       test = whowins.rps_Driver(@player1_move, @player2_move, name1, name2) 
       if test[0] == 1
@@ -34,9 +35,10 @@ class Game
         @winner = 0
         @winnersName = noname
       end
-      thewinner = @winner
+      @thewinner = @winner
       scoreboard = PlayersScoreboard.new
-      scoreboardTracker = scoreboard.players(thewinner, @winner)
+      scoreboardTracker = scoreboard.players(@thewinner, @winnersName)
+      counter += 1
     end
   end
   
@@ -108,6 +110,7 @@ class PlayersScoreboard
   def players(elWinner, winnersname)
   winner_name = winnersname
   whowon = elWinner
+  @name = ""
   if whowon == 1
     @player1_wins += 1
     @player2_losses += 1
@@ -121,8 +124,8 @@ class PlayersScoreboard
   else
     puts 'it must have been a draw'
   end
-  end
   return @player1_log, @player2_log
+  end
 end
 
 puts "-" * 60
@@ -130,6 +133,20 @@ puts " Rock Paper Scissors" * 3
 puts "-" * 60
 puts 
 puts
+puts "How many rounds would you like to play"
+numberofrounds = gets.chomp.to_i
+
+checkNumber = numberofrounds % 2
+
+until checkNumber > 0
+  
+  puts "That doesn't appear to be a valid number of rounds. Please enter an integer (whole number) greater than zero: "
+  numberofrounds = gets.chomp.to_i
+  checkNumber = numberofrounds % 2
+  
+end
+
+
 puts "Player 1 name: "
 player1_create = gets.chomp
 
@@ -154,7 +171,7 @@ end
 puts
 
 newgame = Game.new
-newgame.round(player1_create, player1_move_create, player2_create, player2_move_create )
+newgame.round(player1_create, player1_move_create, player2_create, player2_move_create, numberofrounds)
 
 puts
 puts "-" * 60
