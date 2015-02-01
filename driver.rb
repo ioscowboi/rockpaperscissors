@@ -111,8 +111,6 @@ class Driver
           player2_move_create = gets.chomp.downcase
         end
     
-        @newgame.round(player1_create, player1_move_create, player2_create, player2_move_create, numberofrounds)
-    
         #didsomeonewin tracks the return value from the round method in the Game class. Depending on its value (0, 1, or 2),
         #p1 or p2 gets the value. 
         didsomeonewin = @newgame.round(player1_create, player1_move_create, player2_create, player2_move_create, numberofrounds)
