@@ -158,17 +158,10 @@ class Driver
   puts
   puts "How many rounds would you like to play"
   numberofrounds = gets.chomp.to_i
-
-  checkNumber = numberofrounds % 2
-
-  until checkNumber > 0
   
-    puts "That doesn't appear to be a valid number of rounds. Please enter an integer (whole number) greater than zero: "
-    numberofrounds = gets.chomp.to_i
-    checkNumber = numberofrounds % 2
-  
-  end
-  
+  puts 
+  puts "Ok, #{numberofrounds} rounds. Let's begin.."
+  puts
   @newgame = Game.new
   puts "Player 1 name: Computer "
   player1_create = "Computer"
