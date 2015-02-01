@@ -25,7 +25,7 @@ class Driver
   puts
   require_relative 'game'
   @newgame = Game.new
-  
+
   player1_create = "Computer"
   puts "Player 1 name: #{player1_create} "
   
@@ -67,8 +67,6 @@ class Driver
       puts "Please enter rock, paper, or scissors"
       player2_move_create = gets.chomp.downcase
     end
-    
-    @newgame.round(player1_create, player1_move_create, player2_create, player2_move_create, numberofrounds)
     
     didsomeonewin = @newgame.round(player1_create, player1_move_create, player2_create, player2_move_create, numberofrounds)
     
