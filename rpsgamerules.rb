@@ -44,7 +44,7 @@ class RPSGameRules
     elsif @player2wins == 1
       puts @player2_name +" wins!"
     else
-      puts ""
+      puts "Draw, no one wins"
     end
     return @player1wins, @player2wins
   end
