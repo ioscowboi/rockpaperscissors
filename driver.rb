@@ -36,11 +36,14 @@ class Driver
 
 # counter is the local variable that counts the number of rounds played until it matches the number of games declared by the user
   counter = 1
+  tiecounter = counter
   
   p1 = @player1wins.to_i
   p2 = @player2wins.to_i
 
   until counter > numberofrounds
+    
+    counter = tiecounter if tiecounter > counter
     puts "Round #{counter}... "
     puts
     
@@ -50,7 +53,7 @@ class Driver
 
     puts "#{player1_create}: rock, paper, or scissors? "
     player1_move_create = ["rock", "paper", "scissors"].sample
-    puts "//////////////hidden//////////////"
+    puts "#{player1_move_create}"
 
 
     until player1_move_create == "rock" || player1_move_create == "paper" || player1_move_create  == "scissors"
@@ -80,51 +83,15 @@ class Driver
     puts "Player 1 wins: #{p1} ::: Player 2 wins: #{p2}"
     
     if p1 == p2 && counter > numberofrounds
-      until p1 != p2 && counter > numberofrounds
-        puts ""
-        puts ":::::TIEBREAKER:::::" * 2
-        puts
-        puts "Round #{counter}... "
-        puts
+      puts ""
+      puts ":::::TIEBREAKER:::::" * 2
+      puts
+
     
-        counter += 1
-    
-        puts "Player 1 name: #{player1_create}"
-
-        puts "#{player1_create}: rock, paper, or scissors? "
-        player1_move_create = ["rock", "paper", "scissors"].sample
-        puts "//////////////hidden//////////////"
-
-
-        until player1_move_create == "rock" || player1_move_create == "paper" || player1_move_create  == "scissors"
-          puts "Please enter rock, paper, or scissors"
-          player1_move_create = gets.chomp.downcase
-        end
-
-        puts "Player 2 name: #{player2_create}"
-
-        puts "#{player2_create}: rock, paper, or scissors? "
-        player2_move_create = gets.chomp.downcase
-
-        until player2_move_create == "rock" || player2_move_create == "paper" || player2_move_create  == "scissors"
-          puts "Please enter rock, paper, or scissors"
-          player2_move_create = gets.chomp.downcase
-        end
-    
-        #didsomeonewin tracks the return value from the round method in the Game class. Depending on its value (0, 1, or 2),
-        #p1 or p2 gets the value. 
-        didsomeonewin = @newgame.round(player1_create, player1_move_create, player2_create, player2_move_create, numberofrounds)
-    
-        if didsomeonewin == 1
-          p1 += 1
-        elsif didsomeonewin == 2
-          p2 += 1
-        else
-        end
-      
-        puts "Player 1 wins: #{p1} ::: Player 2 wins: #{p2}"
-      end
+      counter = numberofrounds
+      tiecounter += 1
     end
+    
       
     puts
     @player1wins = p1 
@@ -155,3 +122,4 @@ class Driver
   puts
   
 end
+
